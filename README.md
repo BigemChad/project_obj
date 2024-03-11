@@ -17,21 +17,21 @@ Każda klasa powinna posiadać co najmniej 1 pole prywatne i 1 pole protected
 
 ### Todo
 
-- [] Poruszanie się w strukturze z linii komend:
+- [X] Poruszanie się w strukturze z linii komend:
   - W systemie znajdują się obiekty.
   - Tylko liść zawiera w sobie listę obiektów. Długość listy jest nieograniczona
-- [] Struktura - operacje: 
+- [X] Struktura - operacje: 
   - [nazwa węzła(klasy)]- zmiana węzła w strukturze
-- [] Obiekty - operacje:
+- [X] Obiekty - operacje:
   - MO  [obiekt]- tworzy obiekt o nazwie „obiekt” dla bieżącego liścia– należy podać parametry obiektu
   - DO  [obiekt]- usuwa obiekt o nazwie „obiekt”dla bieżącego liścia
   - MDO [obiekt]– modyfikacja obiektu o nazwie „obiekt”dla bieżącego liścia
-- [] Polecenie DIR - wyświetla informacje o obiektach widocznych z danego poziomu - domyślnie tylko informacje o nazwach obiektów (wyświetla listę wszystkich obiektów należących do liści, które dziedziczą z danej klasy
-- [] Polecenie SHOW [obiekt] – wyświetla szczegółowe informacje o obiekcie
+- [X] Polecenie DIR - wyświetla informacje o obiektach widocznych z danego poziomu - domyślnie tylko informacje o nazwach obiektów (wyświetla listę wszystkich obiektów należących do liści, które dziedziczą z danej klasy
+- [X] Polecenie SHOW [obiekt] – wyświetla szczegółowe informacje o obiekcie
 - [] Operacje z plików
   - SAVE – zapis zbioru do pliku
   - READ – odczyt zbioru z pliku
-- [] Polecenie TREE - wyświetla całą strukturę przedstawioną na rysunku np. w formie wcięć
+- [X] Polecenie TREE - wyświetla całą strukturę przedstawioną na rysunku np. w formie wcięć
 - 
 ### Done ✓
 
