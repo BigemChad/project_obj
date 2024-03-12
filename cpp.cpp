@@ -48,14 +48,28 @@ int generateUniqueId(int seed);
 
 
 //class leaf
-class leaf{
-    public: 
-        Node* head = nullptr;
-        char name;
+class LeafBase {
+public:
+    char name;
 
-        leaf(char n) : name(n) {};
+    LeafBase(char name) {
+        this->name = name;
+    }
 
-        void addMember(string toAdd){
+protected:
+    int uniqueId = generateUniqueId(int(name));
+};
+
+class leaf : public LeafBase {
+public:
+    
+    leaf(char n) : LeafBase(n) {}
+
+    Node* head = nullptr;
+    int classId = 3;
+    bool isListNotEmpty = false;
+
+    void addMember(string toAdd){
             if(head == nullptr) {
                 head = new Node();
                 head->name = toAdd;
@@ -130,11 +144,14 @@ class leaf{
             return isListNotEmpty;
         }
 
-        string getListInfo(char leafName) {
+        char passLeafName(){
+            return name;
+        }
+
+        string getListInfo() {
             string result = "";
             Node* temp = head;
-            result+= leafName + ';';
-            cout << result << endl;
+            result+= name + ';';
             while(temp->next!= NULL){
                 result += temp->name + ";";
                 temp = temp->next;
@@ -143,34 +160,33 @@ class leaf{
             if(temp != nullptr)
             result += temp->name;
 
-                cout << result << '\n';
             return result;
         }
 
         Node** passList() {
             return &head;
         }
-    
-    private:
-        int classId = 3;
-        bool isListNotEmpty = false;
-
-    protected:
-        int uniqueId = generateUniqueId(int(name));    
-
+        
 };
 
-//class branch
-class branch{
-    public:
-        vector<leaf> leaves;
-        char name;
-        int n;
-        branch(int hM, char letter){
-            n = hM;
-            name = letter;
-        }
-        void displayMembers() {
+class BranchBase {
+public:
+    char name;
+    vector<leaf> leaves;
+
+    BranchBase(int hM, char letter) : name(letter) {}
+
+protected:
+    int uniqueId = generateUniqueId(time(NULL));
+};
+
+class branch : public BranchBase {
+public:
+    int n;
+
+    branch(int hM, char letter) : BranchBase(hM, letter), n(hM) {}
+
+      void displayMembers() {
            for(auto el : leaves)
                 cout << el.name << " ";
             cout << '\n';
@@ -196,7 +212,23 @@ class branch{
         int uniqueId = generateUniqueId(int(name));
 };
 
-class root{
+class RootBase {
+public:
+    char name = 'A';
+    vector<branch> branches;
+
+    void addBranches() {
+        branches.emplace_back(2, 'B');
+        branches.emplace_back(1, 'C');
+        branches.emplace_back(3, 'D');
+    }
+
+protected:
+    int uniqueId = generateUniqueId(time(NULL));
+};
+
+
+class root : public RootBase{
     public:
 
         char name = 'A';
@@ -547,8 +579,14 @@ void saveList(const string& filename){
         return;
 
     root* temp = &MainRoot;
+    string testCase = "";
+    testCase += temp->branches[0].leaves[0].passLeafName() + ';';
 
-    // string testCase = temp->branches[0].leaves[0].getListInfo();
+    testCase += temp->branches[0].leaves[0].getListInfo();
+    
+    cout<< testCase << endl; 
+    f << testCase;
+    f.close();
 }
 
 void commandHelp(const string& object) {
