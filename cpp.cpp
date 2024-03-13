@@ -7,6 +7,7 @@
 #include <fstream>
 #include <random>
 #include <ctime>
+#include <cctype>
 #elif __linux__
 #include <bits/stdc++.h>
 #endif
@@ -14,8 +15,11 @@
 
 using namespace std;
 //TODO
-// DO / MDO - poprawki
-// SAVE/LOAD
+// MDO - poprawki
+// błąd z ilością znaków
+// possible fix - cin.ignore
+// podwójna strzałka 
+// fix - ???
 
 //ascii dla liter
 const int branch_pos = 66;
@@ -44,6 +48,7 @@ void commandDir(const string& object);
 void commandShow(const string& object);
 void printTree(const string& object);
 void saveList(const string& object);
+void loadList(const string& object);
 int generateUniqueId(int seed);
 
 
@@ -144,21 +149,16 @@ public:
             return isListNotEmpty;
         }
 
-        char passLeafName(){
-            return name;
-        }
-
         string getListInfo() {
             string result = "";
             Node* temp = head;
-            result+= name + ';';
             while(temp->next!= NULL){
                 result += temp->name + ";";
                 temp = temp->next;
             }
 
             if(temp != nullptr)
-            result += temp->name;
+            result += temp->name + ';';
 
             return result;
         }
@@ -293,6 +293,7 @@ Command commands[] = {
     {"show", commandShow},
     {"tree", printTree},
     {"save", saveList},
+    {"load", loadList},
     {"github", github}
     
 };
@@ -329,7 +330,6 @@ bool isBranch(string branch) {
             return false;
 }
 
-
 bool isLeaf(string leaf){
     vector<string> leaves = {" E"," F"," G"," H"," I"," J"};
     for(auto el : leaves)
@@ -338,8 +338,6 @@ bool isLeaf(string leaf){
     
             return false;
 }
-
-
 
 // Parsowanie komendy od użytkownika
 void parseInput(const string& input) {
@@ -355,6 +353,15 @@ void parseInput(const string& input) {
             return;
         }
     }
+}
+
+string removeSpaces(const string& str) {
+    string result;
+    for(char c : str){
+        if(c != ' ')
+            result += c;
+    }
+    return result;
 }
 
 // Komendy 
@@ -566,27 +573,71 @@ void commandShow(const string& object){
 }
 
 void saveList(const string& filename){
-    fstream f;
-    string trimmed = filename;
-    remove(trimmed.begin(), trimmed.end() + 1, ' ');
-    f.open(trimmed);
-    if(!f.is_open()){
-        cout << "Nie otworzony plik\n";
-           return;
-    
-    }
     if(!isAfterFirstCd)
         return;
+    if(!(cd.current_l->listStatus()))
+        return;
+    if(cd.current_l->head == nullptr)
+    {
+        return;
+        cout << "Lista jest pusta\n";
+    }
 
-    root* temp = &MainRoot;
+    if(isInArrayLeaf(cd.current_l->name)){
+        string trimmed = removeSpaces(filename);
+        ofstream f(trimmed, ofstream::out | ofstream::trunc);
+            if(!f.is_open()){
+                cout << "Nie otworzony plik\n";
+                return;
+            }
+
     string testCase = "";
-    testCase += temp->branches[0].leaves[0].passLeafName() + ';';
-
-    testCase += temp->branches[0].leaves[0].getListInfo();
-    
-    cout<< testCase << endl; 
-    f << testCase;
+    testCase += cd.current_l->getListInfo();
+    trimmed = removeSpaces(testCase);
+    f << trimmed;
     f.close();
+    cout << "Zapis wykonany w pliku" + filename << '\n';
+    }
+    else{
+        cout << "Nie jestes w obiekcie typu leaf\n";
+    }
+
+}
+
+void loadList(const string& filename){
+    if(!isAfterFirstCd)
+            return;
+    
+        if(isInArrayLeaf(cd.current_l->name)){
+            string trimmed = removeSpaces(filename);
+            vector<string> tempList;
+            fstream f;
+            f.open(trimmed);
+                if(!f.is_open()){
+                    cout << "Nie otworzony plik\n";
+                    return;
+                }
+        string toLoad, item;
+        f >> toLoad;
+        cout << toLoad << '\n';
+        stringstream ss(toLoad);
+        while(getline(ss, item, ';'))
+            tempList.push_back(item);
+
+        
+        
+        for(auto el : tempList)
+        {
+            cd.current_l->addMember((' ' + el));
+            cout << "t\n";
+        }
+        
+        f.close();
+        
+        }
+        else{
+            cout << "Nie jestes w obiekcie typu leaf\n";
+        }
 }
 
 void commandHelp(const string& object) {
