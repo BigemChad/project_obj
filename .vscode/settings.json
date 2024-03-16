@@ -7,6 +7,7 @@
         "vector": "cpp",
         "xutility": "cpp",
         "fstream": "cpp",
-        "iostream": "cpp"
+        "iostream": "cpp",
+        "string": "cpp"
     }
 }

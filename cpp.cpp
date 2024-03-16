@@ -311,7 +311,6 @@ bool isInArrayLeaf(char name) {
 bool isStringNotEmpty(string temp) {
     return !temp.empty() && temp[0] == ' ';
 }
-//temp == " E" || temp == " F" || temp == " G" || temp == " H" || temp == " I" || temp == " J"
 
 bool isRoot(string root){
     string rootLetter = " A";
@@ -483,9 +482,9 @@ void modifyObject(const string& object){
         string newName;
         cout << "Edytujesz obiekt" << object << '\n';
         cout << "Jak chcesz nazwac obiekt:\n";
-        cin.ignore();
         cin >> newName;
         cd.current_l->modifyMember(object, newName);
+        cin.ignore();
     }
     else{
         cout << "Nie jestes w obiekcie typu leaf\n";
@@ -619,17 +618,14 @@ void loadList(const string& filename){
                 }
         string toLoad, item;
         f >> toLoad;
-        cout << toLoad << '\n';
         stringstream ss(toLoad);
         while(getline(ss, item, ';'))
             tempList.push_back(item);
 
-        
-        
         for(auto el : tempList)
         {
             cd.current_l->addMember((' ' + el));
-            cout << "t\n";
+            cout << "Wczytywanie do liścia " << cd.current_l->name << '\n';
         }
         
         f.close();
@@ -691,7 +687,6 @@ int main() {
     createTree();
     cout << "Menu Moment\n";
     cout << "Lista komend polecenie help\n";
-
     while (true) {
         cout << current_node << " " << arrow_pos;
         getline(cin, input);
