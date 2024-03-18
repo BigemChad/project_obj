@@ -1,3 +1,8 @@
+### Done ✓
+### Saveall/loadall - zapis każdej listy z każdego liścia
+### Save/Load - zapis listy z liścia
+### 18.03.24 19.57
+
 ### Importante
 
 Należy:
@@ -28,11 +33,7 @@ Każda klasa powinna posiadać co najmniej 1 pole prywatne i 1 pole protected
   - MDO [obiekt]– modyfikacja obiektu o nazwie „obiekt”dla bieżącego liścia
 - [X] Polecenie DIR - wyświetla informacje o obiektach widocznych z danego poziomu - domyślnie tylko informacje o nazwach obiektów (wyświetla listę wszystkich obiektów należących do liści, które dziedziczą z danej klasy
 - [X] Polecenie SHOW [obiekt] – wyświetla szczegółowe informacje o obiekcie
-- [] Operacje z plików
+- [X] Operacje z plików
   - SAVE – zapis zbioru do pliku
   - READ – odczyt zbioru z pliku
 - [X] Polecenie TREE - wyświetla całą strukturę przedstawioną na rysunku np. w formie wcięć
-- 
-### Done ✓
-
-- [X] Początek menu
