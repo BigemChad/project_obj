@@ -368,7 +368,7 @@ string removeSpaces(const string& str) {
 }
 
 string getLineFromFile(const string& filename, int line) {
-    ifstream file;
+    fstream file;
     file.open(filename);
     string result = "";
     int i = 0;
@@ -377,7 +377,7 @@ string getLineFromFile(const string& filename, int line) {
         getline(file, line);
         i++;
     }
-    getline(file, result);
+    getline(file, result, '\n');
     file.close();
     return result;
 }
@@ -637,12 +637,11 @@ void saveAll(const string& filename) {
         for (int i = 0; i < MainRoot.branches.size(); ++i) {
             // cout << 't' + i + '\n';
             for (int j = 0; j < MainRoot.branches[i].leaves.size(); ++j) {
-                cout << 't' + j + '\n';
+                // cout << 't' + j + '\n';
                 auto& leaf = MainRoot.branches[i].leaves[j];
 
                 string leafData = leaf.getListInfo();
                 string trimmedData = removeSpaces(leafData);
-                cout << trimmedData << '\n';
                 if (leafData == "") {
                     f << ";\n";
                 } else {
@@ -652,7 +651,7 @@ void saveAll(const string& filename) {
         }
 
     f.close();
-    cout << "Zapis wykonany w pliku " << filename << '\n';
+    cout << "Zapis wykonany w pliku" << filename << '\n';
      }
      else{
         cout << "Nie jestes w obiekcie typu leaf\n";
@@ -663,35 +662,36 @@ void loadList(const string& filename){
     if(!isAfterFirstCd)
             return;
     
-        if(isInArrayLeaf(cd.current_l->name)){
-            string trimmed = removeSpaces(filename);
-            vector<string> tempList;
-            int lineNumber = 0;
-
-        for (int i = 0; i < MainRoot.branches.size(); ++i) {
-            // cout << 't' + i + '\n';
-            for (int j = 0; j < MainRoot.branches[i].leaves.size(); ++j) {
-                // cout << 't' + j + '\n';
-                auto& leaf = MainRoot.branches[i].leaves[j];
-
+       if(isInArrayLeaf(cd.current_l->name)){
+        string trimmed = removeSpaces(filename);
+        fstream f;
+        f.open(trimmed);
+            if(!f.is_open()){
+                cout << "Nie otworzony plik\n";
+                return;
+            }
+        
+        vector<string> tempList;
                     string toLoad, item;
-                    toLoad = getLineFromFile(filename,lineNumber);
+                    getline(f, toLoad);
                     stringstream ss(toLoad);
                     while(getline(ss, item, ';'))
                         tempList.push_back(item);
-
+                    cout << "Wczytywanie do liscia " << cd.current_l->name << '\n';
                     if(!(tempList.empty()))
                     for(auto el : tempList)
                     {
                         cd.current_l->addMember((' ' + el));
-                        cout << "Wczytywanie do liścia " << cd.current_l->name << '\n';
+                        
                     }
+                    else
+                        cout << "Plik jest pusty\n";
+            f.close();
                 }
-            }
-        }
         else{
             cout << "Nie jestes w obiekcie typu leaf\n";
         }
+        
 }
 
 void loadAll(const string& filename) {
@@ -724,14 +724,17 @@ void loadAll(const string& filename) {
                 }
 
                 for(auto el : tempList){
+                    if(!(el.empty())){
                     string temp = " " + el;
                     leaf.addMember(temp);
+                    }
                 }
 
                 lineNumber++;
             }
         
         }
+        cout << "Wczytywanie zakonczone pomyslnie\n";
         }
         else{
             cout << "Nie jestes w obiekcie typu leaf\n";
