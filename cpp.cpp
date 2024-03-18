@@ -681,7 +681,10 @@ void loadList(const string& filename){
                     if(!(tempList.empty()))
                     for(auto el : tempList)
                     {
+                        if(!(el.empty()))
                         cd.current_l->addMember((' ' + el));
+                        else
+                        cout << "Plik jest pusty\n";
                         
                     }
                     else
