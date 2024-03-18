@@ -4,6 +4,8 @@
 #include <cstdlib>
 #endif
 
+//Maybe wariant na maca
+
 void openLink(const std::string& link) {
 #ifdef _WIN32
     //Windows

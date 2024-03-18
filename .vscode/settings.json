@@ -8,6 +8,9 @@
         "xutility": "cpp",
         "fstream": "cpp",
         "iostream": "cpp",
-        "string": "cpp"
+        "string": "cpp",
+        "xiosbase": "cpp",
+        "iosfwd": "cpp",
+        "xmemory": "cpp"
     }
 }

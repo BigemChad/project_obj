@@ -14,12 +14,16 @@
 #include "githubCopyright.h"
 
 using namespace std;
+//savefile to przykładowy plik do zapisu danych z liscia
+
 //TODO
-// MDO - poprawki
-// błąd z ilością znaków
-// possible fix - cin.ignore
-// podwójna strzałka 
-// fix - ???
+// NOTHING
+
+//gitignore
+// a.exe
+// a.out
+// README.md
+
 
 //ascii dla liter
 const int branch_pos = 66;
@@ -48,7 +52,9 @@ void commandDir(const string& object);
 void commandShow(const string& object);
 void printTree(const string& object);
 void saveList(const string& object);
+void saveAll(const string& object);
 void loadList(const string& object);
+void loadAll(const string& object);
 int generateUniqueId(int seed);
 
 
@@ -152,16 +158,12 @@ public:
         string getListInfo() {
             string result = "";
             Node* temp = head;
-            while(temp->next!= NULL){
+            while (temp != nullptr) {
                 result += temp->name + ";";
                 temp = temp->next;
             }
-
-            if(temp != nullptr)
-            result += temp->name + ';';
-
             return result;
-        }
+}
 
         Node** passList() {
             return &head;
@@ -273,12 +275,12 @@ current cd;
 string current_node;
 
 // definicja typu komendy
-typedef void (*CommandArgument)(const string&);
+typedef void (*FunctionAsArgument)(const string&);
 
 // Struktura komendy
 struct Command {
     string name;
-    CommandArgument function;
+    FunctionAsArgument function;
 };
 
 // Lista komend
@@ -294,6 +296,8 @@ Command commands[] = {
     {"tree", printTree},
     {"save", saveList},
     {"load", loadList},
+    {"saveall", saveAll},
+    {"loadall", loadAll},
     {"github", github}
     
 };
@@ -360,6 +364,21 @@ string removeSpaces(const string& str) {
         if(c != ' ')
             result += c;
     }
+    return result;
+}
+
+string getLineFromFile(const string& filename, int line) {
+    ifstream file;
+    file.open(filename);
+    string result = "";
+    int i = 0;
+    while(i < line) {
+        string line;
+        getline(file, line);
+        i++;
+    }
+    getline(file, result);
+    file.close();
     return result;
 }
 
@@ -603,8 +622,80 @@ void saveList(const string& filename){
 
 }
 
+void saveAll(const string& filename) {
+     if (!isAfterFirstCd)
+        return;
+    
+     if(isInArrayLeaf(cd.current_l->name)){
+        string trimmed = removeSpaces(filename);
+        ofstream f(trimmed, ofstream::out | ofstream::trunc);
+            if(!f.is_open()){
+                cout << "Nie otworzony plik\n";
+                return;
+            }
+
+        for (int i = 0; i < MainRoot.branches.size(); ++i) {
+            cout << 't' + i + '\n';
+            for (int j = 0; j < MainRoot.branches[i].leaves.size(); ++j) {
+                cout << 't' + j + '\n';
+                auto& leaf = MainRoot.branches[i].leaves[j];
+
+                string leafData = leaf.getListInfo();
+                string trimmedData = removeSpaces(leafData);
+                cout << trimmedData << '\n';
+                if (leafData == "") {
+                    f << ";\n";
+                } else {
+                    f << trimmedData << '\n';
+                }
+            }
+        }
+
+    f.close();
+    cout << "Zapis wykonany w pliku " << filename << '\n';
+     }
+     else{
+        cout << "Nie jestes w obiekcie typu leaf\n";
+     }
+}
+
 void loadList(const string& filename){
     if(!isAfterFirstCd)
+            return;
+    
+        if(isInArrayLeaf(cd.current_l->name)){
+            string trimmed = removeSpaces(filename);
+            vector<string> tempList;
+            int lineNumber = 0;
+
+        for (int i = 0; i < MainRoot.branches.size(); ++i) {
+            cout << 't' + i + '\n';
+            for (int j = 0; j < MainRoot.branches[i].leaves.size(); ++j) {
+                cout << 't' + j + '\n';
+                auto& leaf = MainRoot.branches[i].leaves[j];
+
+                    string toLoad, item;
+                    toLoad = getLineFromFile(filename,lineNumber);
+                    stringstream ss(toLoad);
+                    while(getline(ss, item, ';'))
+                        tempList.push_back(item);
+
+                    if(!(tempList.empty()))
+                    for(auto el : tempList)
+                    {
+                        cd.current_l->addMember((' ' + el));
+                        cout << "Wczytywanie do liścia " << cd.current_l->name << '\n';
+                    }
+                }
+            }
+        }
+        else{
+            cout << "Nie jestes w obiekcie typu leaf\n";
+        }
+}
+
+void loadAll(const string& filename) {
+        if(!isAfterFirstCd)
             return;
     
         if(isInArrayLeaf(cd.current_l->name)){
