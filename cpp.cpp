@@ -635,7 +635,7 @@ void saveAll(const string& filename) {
             }
 
         for (int i = 0; i < MainRoot.branches.size(); ++i) {
-            cout << 't' + i + '\n';
+            // cout << 't' + i + '\n';
             for (int j = 0; j < MainRoot.branches[i].leaves.size(); ++j) {
                 cout << 't' + j + '\n';
                 auto& leaf = MainRoot.branches[i].leaves[j];
@@ -669,9 +669,9 @@ void loadList(const string& filename){
             int lineNumber = 0;
 
         for (int i = 0; i < MainRoot.branches.size(); ++i) {
-            cout << 't' + i + '\n';
+            // cout << 't' + i + '\n';
             for (int j = 0; j < MainRoot.branches[i].leaves.size(); ++j) {
-                cout << 't' + j + '\n';
+                // cout << 't' + j + '\n';
                 auto& leaf = MainRoot.branches[i].leaves[j];
 
                     string toLoad, item;
@@ -699,7 +699,7 @@ void loadAll(const string& filename) {
             return;
     
         if(isInArrayLeaf(cd.current_l->name)){
-            string trimmed = removeSpaces(filename);
+            string trimmed = removeSpaces(filename),toLoad,item;
             vector<string> tempList;
             fstream f;
             f.open(trimmed);
@@ -707,20 +707,31 @@ void loadAll(const string& filename) {
                     cout << "Nie otworzony plik\n";
                     return;
                 }
-        string toLoad, item;
-        f >> toLoad;
-        stringstream ss(toLoad);
-        while(getline(ss, item, ';'))
-            tempList.push_back(item);
+            f.close();
+            int lineNumber = 0;
+        
+         for (int i = 0; i < MainRoot.branches.size(); ++i) {
+            // cout << 't' + i + '\n';
+            for (int j = 0; j < MainRoot.branches[i].leaves.size(); ++j) {
+                // cout << 't' + j + '\n';
+                auto& leaf = MainRoot.branches[i].leaves[j];
+                toLoad = getLineFromFile(trimmed, lineNumber);
+                // cout << toLoad << '\n';
+                stringstream ss(toLoad);
+                tempList.clear();
+                while(getline(ss, item, ';')){
+                    tempList.push_back(item);
+                }
 
-        for(auto el : tempList)
-        {
-            cd.current_l->addMember((' ' + el));
-            cout << "Wczytywanie do liścia " << cd.current_l->name << '\n';
+                for(auto el : tempList){
+                    string temp = " " + el;
+                    leaf.addMember(temp);
+                }
+
+                lineNumber++;
+            }
+        
         }
-        
-        f.close();
-        
         }
         else{
             cout << "Nie jestes w obiekcie typu leaf\n";
