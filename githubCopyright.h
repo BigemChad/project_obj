@@ -14,7 +14,8 @@ void openLink(const std::string& link) {
     //Linux
     std::string command = "xdg-open " + link;
     system(command.c_str());
-#else
-    std::cerr << "Mac user cringe" << std::endl;
+#elif __APPLE__
+    std::string command = "open " + link;
+    system(command.c_str());
 #endif
 }
